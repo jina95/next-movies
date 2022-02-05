@@ -1,16 +1,49 @@
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import Seo from "../components/Seo"
+import { useRouter } from "next/router"
 
 export default function Home({ results }) {
+  const router = useRouter()
+  const onClick = (id, title) => {
+    // router.push(`/movies/${id}`)
+    // router.push(
+    //   {
+    //     pathname: `/movies/${id}`,
+    //     query: {
+    //       title,
+    //     },
+    //   },
+    //   `/movies/${id}`
+    // )
+    router.push(`/movies/${title}/${id}`)
+  }
   return (
     <div className='container'>
       <Seo title='Home' />
 
       {results?.map((movie) => {
         return (
-          <div className='movie' key={movie.id}>
-            <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} />
-            <h4>{movie.original_title}</h4>
+          <div
+            onClick={() => onClick(movie.id, movie.original_title)}
+            key={movie.id}
+            className='movie'
+          >
+            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+            {/* <Link
+              href={{
+                pathname: `/movies/${movie.id}`,
+                query: {
+                  title: movie.original_title,
+                },
+              }}
+              as={`/movies/${movie.id}`}
+            > */}
+            <Link href={`/movies/${movie.original_title}/${movie.id}`}>
+              <a>
+                <h4>{movie.original_title}</h4>
+              </a>
+            </Link>
           </div>
         )
       })}
@@ -20,6 +53,9 @@ export default function Home({ results }) {
           grid-template-columns: 1fr 1fr;
           padding: 20px;
           gap: 20px;
+        }
+        .movie {
+          cursor: pointer;
         }
         .movie img {
           max-width: 100%;
